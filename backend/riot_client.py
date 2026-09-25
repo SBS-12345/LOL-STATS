@@ -4,6 +4,7 @@ import time
 import requests
 from urllib.parse import quote
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -42,3 +43,15 @@ def get_match_ids(puuid, num_matches = 20, match_type = "ranked"):
 def get_matches(match_id):
     endpoint = f"/lol/match/v5/matches/{match_id}"
     return _get(endpoint)
+
+if __name__ == "__main__":
+    account = get_account("2bad4dota", "NA1")
+    print(account)
+
+    match_ids = get_match_ids(account["puuid"], 10)
+    print(match_ids)
+
+    match = get_matches(match_ids[0])
+    with open("match.json", "w") as file:
+        json.dump(match, file, indent=2) # Getting output in json file to check all the metadata
+    print(match["metadata"], match["info"]["gameDuration"])
